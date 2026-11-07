@@ -33,6 +33,19 @@ protected:
 	void SpawnHitParticles(const FVector& ImpactPoint);
 	void DirectionalHitReact(const FVector& ImpactPoint);
 	void PlayHitReactMontage(const FName& SectionName);
+	void StopAttackMontage();
+
+	UPROPERTY(BlueprintReadOnly)
+	AActor* CombatTarget;
+
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	double WarpTargetDistance = 75.f;
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetTranslationWarpTarget();
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetRotationWarpTarget();
 
 	UPROPERTY(BlueprintReadOnly)
 	class AWeapon* EquippedWeapon;

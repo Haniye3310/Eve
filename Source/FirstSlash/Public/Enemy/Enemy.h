@@ -37,6 +37,7 @@ protected:
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
 
 
+
 private:
 
 	FTimerHandle PatrolTimer;
@@ -86,9 +87,6 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	class UHealthBarComponent* HealthBarWidget;
-
-	UPROPERTY()
-	AActor* CombatTarget;
 
 	UPROPERTY()
 	double AttackRadius = 150.f;
