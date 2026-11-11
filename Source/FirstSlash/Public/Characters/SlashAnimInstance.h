@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CharacterTypes.h"
 #include "SlashAnimInstance.generated.h"
 
 /**
@@ -17,12 +18,16 @@ public:
 	virtual void NativeInitializeAnimation() override;
 	virtual void NativeUpdateAnimation(float DeltaTime) override;
 
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	class ASlashCharacter* SlashCharacter;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	class UCharacterMovementComponent* SlashCharacterMovement;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float GroundSpeed;
-	UPROPERTY(BlueprintReadOnly)
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	bool IsFalling;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	EActionState ActionState;
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	TEnumAsByte<EDeathPos> DeathPose;
 };

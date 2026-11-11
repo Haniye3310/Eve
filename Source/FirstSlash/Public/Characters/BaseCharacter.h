@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/HitInterface.h"
+#include "Characters/CharacterTypes.h"
 #include "BaseCharacter.generated.h"
 
 class UAnimMontage;
@@ -16,7 +17,7 @@ class FIRSTSLASH_API ABaseCharacter : public ACharacter, public IHitInterface
 public:
 	ABaseCharacter();
 	virtual void Tick(float DeltaTime) override;
-
+	FORCEINLINE TEnumAsByte<EDeathPos> GetDeathPose() const { return DeathPos; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
@@ -52,6 +53,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	class UAttributeComponent* Attributes;
+
+	UPROPERTY(BlueprintReadOnly)
+	TEnumAsByte<EDeathPos> DeathPos;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void AttackEnd();

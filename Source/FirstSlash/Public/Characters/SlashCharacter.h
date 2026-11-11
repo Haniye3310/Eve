@@ -20,13 +20,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+	virtual void Jump() override;
 	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
-
+	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void Attack() override;
 	virtual bool CanAttack() override;
 	virtual void AttackEnd() override;
+	virtual void Die() override;
 
 	void EquipWeapon(AWeapon* Weapon);
 	void MoveForward(float Value);
@@ -65,6 +67,10 @@ protected:
 
 private:
 
+	void InitializeEveOverlay();
+	void SetHUDHealth();
+	bool IsUnoccupied();
+
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArm;
 
@@ -73,5 +79,8 @@ private:
 
 	UPROPERTY(VisibleInstanceOnly)
 	AItem* OverlappingItem;
+
+	UPROPERTY()
+	class UEveOverlay* EveOverlay;
 
 };

@@ -26,12 +26,10 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void HandleDamage(float DamageAmount);
 	virtual void AttackEnd() override;
-	virtual int32 PlayDeathMontage() override;
 
 
 
-	UPROPERTY(BlueprintReadOnly)
-	TEnumAsByte<EDeathPos> DeathPos;
+
 
 	UPROPERTY(BlueprintReadOnly)
 	EEnemyState EnemyState = EEnemyState::EES_Patrolling;
@@ -88,7 +86,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	class UHealthBarComponent* HealthBarWidget;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	double AttackRadius = 150.f;
 
 	UPROPERTY(EditAnywhere)

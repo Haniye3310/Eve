@@ -8,6 +8,9 @@
 #include "Items/Weapons/Weapon.h"
 #include "Animation/AnimMontage.h"
 #include "Components/StaticMeshComponent.h"
+#include "HUD/EveHud.h"
+#include "HUD/EveOverlay.h"
+#include "Components/AttributeComponent.h"
 //#include "Components/BoxComponent.h"
 
 ASlashCharacter::ASlashCharacter()
@@ -38,6 +41,27 @@ void ASlashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	Tags.Add(FName("EngagableTarget"));
+	InitializeEveOverlay();
+}
+
+void ASlashCharacter::InitializeEveOverlay()
+{
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	if (PlayerController)
+	{
+		AEveHud* EveHud = Cast<AEveHud>(PlayerController->GetHUD());
+		if (EveHud)
+		{
+			EveOverlay = EveHud->GetEveOverlay();
+			if (EveOverlay && Attributes)
+			{
+				EveOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+				EveOverlay->SetStaminaBarPercent(1);
+				EveOverlay->SetGold(0);
+				EveOverlay->SetSouls(0);
+			}
+		}
+	}
 }
 
 void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -47,7 +71,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAxis(FName("Turn"), this, &ASlashCharacter::Turn);
 	PlayerInputComponent->BindAxis(FName("LookUp"), this, &ASlashCharacter::LookUp);
 	PlayerInputComponent->BindAxis(FName("MoveRight"), this, &ASlashCharacter::MoveRight);
-	PlayerInputComponent->BindAction(FName("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(FName("Jump"), EInputEvent::IE_Pressed, this, &ASlashCharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Equip"), EInputEvent::IE_Pressed, this, &ASlashCharacter::EKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), EInputEvent::IE_Pressed, this, &ASlashCharacter::Attack);
 
@@ -57,13 +81,40 @@ void ASlashCharacter::GetHit_Implementation(const FVector& ImpactPoint, AActor* 
 {
 	Super::GetHit_Implementation(ImpactPoint, Hitter);
 	SetWeaponCollisionEnabled(ECollisionEnabled::NoCollision);
-	ActionState = EActionState::EAS_HitReaction;
+	if (Attributes && Attributes->GetHealthPercent() > 0.f) 
+	{
+		ActionState = EActionState::EAS_HitReaction;
+
+	}
 }
 
 float ASlashCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
 	HandleDamage(DamageAmount);
+	SetHUDHealth();
 	return DamageAmount;
+}
+
+void ASlashCharacter::Jump()
+{
+	if (IsUnoccupied())
+	{
+		Super::Jump();
+
+	}
+}
+
+bool ASlashCharacter::IsUnoccupied()
+{
+	return ActionState == EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::SetHUDHealth()
+{
+	if (EveOverlay && Attributes)
+	{
+		EveOverlay->SetHealthBarPercent(Attributes->GetHealthPercent());
+	}
 }
 
 void ASlashCharacter::EquipWeapon(AWeapon* Weapon)
@@ -199,6 +250,12 @@ void ASlashCharacter::Arm()
 void ASlashCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::Die()
+{
+	Super::Die();
+	ActionState = EActionState::EAS_Dead;
 }
 
 

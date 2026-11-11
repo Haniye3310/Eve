@@ -40,7 +40,13 @@ int32 ABaseCharacter::PlayAttackMontage()
 }
 int32 ABaseCharacter::PlayDeathMontage()
 {
-	return PlayRandomMontageSection(DeathMontage,DeathMontageSections);
+	const int32 Selection = PlayRandomMontageSection(DeathMontage, DeathMontageSections);
+	TEnumAsByte<EDeathPos> Pose(Selection);
+	if (Pose < EDeathPos::EDP_MAX)
+	{
+		DeathPos = Pose;
+	}
+	return Selection;
 }
 bool ABaseCharacter::CanAttack()
 {
@@ -52,7 +58,7 @@ void ABaseCharacter::AttackEnd()
 }
 void ABaseCharacter::Die()
 {
-	
+	PlayDeathMontage();
 }
 void ABaseCharacter::HandleDamage(float DamageAmount)
 {
