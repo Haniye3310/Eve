@@ -54,10 +54,14 @@ bool ABaseCharacter::CanAttack()
 }
 void ABaseCharacter::AttackEnd()
 {
-	
+	if (CombatTarget && CombatTarget->ActorHasTag("Dead")) 
+	{
+		CombatTarget = nullptr;
+	}
 }
 void ABaseCharacter::Die()
 {
+	Tags.Add(FName("Dead"));
 	PlayDeathMontage();
 }
 void ABaseCharacter::HandleDamage(float DamageAmount)
@@ -97,6 +101,10 @@ void ABaseCharacter::SpawnHitParticles(const FVector& ImpactPoint)
 bool ABaseCharacter::IsAlive()
 {
 	return Attributes && Attributes->IsAlive();
+}
+void ABaseCharacter::DisableMeshCollision()
+{
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 void ABaseCharacter::DisableCapsule()
 {

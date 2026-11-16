@@ -29,6 +29,7 @@ protected:
 	virtual int32 PlayDeathMontage();
 
 	bool IsAlive();
+	void DisableMeshCollision();
 	void DisableCapsule();
 	void PlayHitSound(const FVector& ImpactPoint);
 	void SpawnHitParticles(const FVector& ImpactPoint);
