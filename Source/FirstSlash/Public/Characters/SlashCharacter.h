@@ -4,14 +4,16 @@
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
 #include "CharacterTypes.h"
+#include "Interfaces/PickupInterface.h"
 #include "SlashCharacter.generated.h"
 class USpringArmComponent;
 class UCameraComponent;
 class AItem;
+class ASoul;
 class UAnimMontage;
 
 UCLASS()
-class FIRSTSLASH_API ASlashCharacter : public ABaseCharacter
+class FIRSTSLASH_API ASlashCharacter : public ABaseCharacter,public IPickupInterface
 {
 	GENERATED_BODY()
 
@@ -21,7 +23,8 @@ public:
 	virtual void GetHit_Implementation(const FVector& ImpactPoint, AActor* Hitter) override;
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
 	virtual void Jump() override;
-	FORCEINLINE void SetOverlappingItem(AItem* Item) { OverlappingItem = Item; }
+	virtual void SetOverlappingItem(AItem* Item) override;
+	virtual void AddSouls(ASoul* Soul) override;
 	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 protected:
 	virtual void BeginPlay() override;
