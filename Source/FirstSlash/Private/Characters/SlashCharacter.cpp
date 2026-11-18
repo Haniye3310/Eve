@@ -11,6 +11,8 @@
 #include "HUD/EveHud.h"
 #include "HUD/EveOverlay.h"
 #include "Components/AttributeComponent.h"
+#include "Items/Soul.h"
+#include "Items/Treasure.h"
 //#include "Components/BoxComponent.h"
 
 ASlashCharacter::ASlashCharacter()
@@ -111,6 +113,20 @@ void ASlashCharacter::SetOverlappingItem(AItem* Item)
 
 void ASlashCharacter::AddSouls(ASoul* Soul)
 {
+	if (Attributes && EveOverlay)
+	{
+		Attributes->AddSouls(Soul->GetSouls());
+		EveOverlay->SetSouls(Attributes->GetSouls());
+	}
+}
+
+void ASlashCharacter::AddGold(ATreasure* Treasure)
+{
+	if (Attributes && EveOverlay)
+	{
+		Attributes->AddGold(Treasure->GetGold());
+		EveOverlay->SetGold(Attributes->GetGold());
+	}
 }
 
 bool ASlashCharacter::IsUnoccupied()

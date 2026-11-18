@@ -11,6 +11,7 @@ class UCameraComponent;
 class AItem;
 class ASoul;
 class UAnimMontage;
+class ATreasure;
 
 UCLASS()
 class FIRSTSLASH_API ASlashCharacter : public ABaseCharacter,public IPickupInterface
@@ -25,6 +26,7 @@ public:
 	virtual void Jump() override;
 	virtual void SetOverlappingItem(AItem* Item) override;
 	virtual void AddSouls(ASoul* Soul) override;
+	virtual void AddGold(ATreasure* Treasure) override;
 	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 protected:
 	virtual void BeginPlay() override;

@@ -29,8 +29,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Sin Variables")
 	float constantTime = 5.f;
-	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
-	float RunningTime;
+
 	UFUNCTION(BlueprintPure)
 	float TransformedSin();
 	EItemState ItemState = EItemState::EIS_Hovering;
@@ -41,8 +40,19 @@ protected:
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
 	virtual void OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	virtual void SpawnPickupSystem();
+	virtual void SpawnPickupSound();
 	UPROPERTY(EditAnywhere)
 	class UNiagaraComponent* ItemEffect;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* PickupSound;
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float RunningTime;
+	UPROPERTY(EditAnywhere)
+	class UNiagaraSystem* PickupEffect;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
