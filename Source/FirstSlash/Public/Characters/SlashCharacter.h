@@ -27,12 +27,14 @@ public:
 	virtual void SetOverlappingItem(AItem* Item) override;
 	virtual void AddSouls(ASoul* Soul) override;
 	virtual void AddGold(ATreasure* Treasure) override;
+	virtual void Tick(float DeltaTime) override;
 	FORCEINLINE EActionState GetActionState() const { return ActionState; }
 protected:
 	virtual void BeginPlay() override;
 	virtual void Attack() override;
 	virtual bool CanAttack() override;
 	virtual void AttackEnd() override;
+	virtual void DodgeEnd() override;
 	virtual void Die() override;
 
 	void EquipWeapon(AWeapon* Weapon);
@@ -46,7 +48,9 @@ protected:
 	void Arm();
 	bool CanDisarm();
 	bool CanArm();
-
+	void Dodge();
+	bool HasEnoughStamina();
+	bool IsOccupied();
 	UPROPERTY(BlueprintReadWrite)
 	ECharacterState CharacterState = ECharacterState::ECS_Unequipped;
 

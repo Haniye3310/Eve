@@ -27,6 +27,7 @@ protected:
 	virtual void HandleDamage(float DamageAmount);
 	virtual int32 PlayAttackMontage();
 	virtual int32 PlayDeathMontage();
+	virtual void PlayDodgeMontage();
 
 	bool IsAlive();
 	void DisableMeshCollision();
@@ -62,6 +63,9 @@ protected:
 	virtual void AttackEnd();
 
 	UFUNCTION(BlueprintCallable)
+	virtual void DodgeEnd();
+
+	UFUNCTION(BlueprintCallable)
 	void SetWeaponCollisionEnabled(ECollisionEnabled::Type CollisionEnabled);
 
 private:
@@ -83,6 +87,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
 	UAnimMontage* DeathMontage;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Combat")
+	UAnimMontage* DodgeMontage;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TArray<FName> AttackMontageSections;

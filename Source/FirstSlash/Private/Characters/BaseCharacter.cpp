@@ -48,6 +48,10 @@ int32 ABaseCharacter::PlayDeathMontage()
 	}
 	return Selection;
 }
+void ABaseCharacter::PlayDodgeMontage()
+{
+	PlayMontageSection(DodgeMontage,FName("Default"));
+}
 bool ABaseCharacter::CanAttack()
 {
 	return false;
@@ -58,6 +62,10 @@ void ABaseCharacter::AttackEnd()
 	{
 		CombatTarget = nullptr;
 	}
+}
+void ABaseCharacter::DodgeEnd()
+{
+	
 }
 void ABaseCharacter::Die()
 {

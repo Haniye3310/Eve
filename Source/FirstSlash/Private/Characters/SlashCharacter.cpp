@@ -17,7 +17,7 @@
 
 ASlashCharacter::ASlashCharacter()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -76,6 +76,7 @@ void ASlashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	PlayerInputComponent->BindAction(FName("Jump"), EInputEvent::IE_Pressed, this, &ASlashCharacter::Jump);
 	PlayerInputComponent->BindAction(FName("Equip"), EInputEvent::IE_Pressed, this, &ASlashCharacter::EKeyPressed);
 	PlayerInputComponent->BindAction(FName("Attack"), EInputEvent::IE_Pressed, this, &ASlashCharacter::Attack);
+	PlayerInputComponent->BindAction(FName("Dodge"), EInputEvent::IE_Pressed, this, &ASlashCharacter::Dodge);
 
 }
 
@@ -126,6 +127,15 @@ void ASlashCharacter::AddGold(ATreasure* Treasure)
 	{
 		Attributes->AddGold(Treasure->GetGold());
 		EveOverlay->SetGold(Attributes->GetGold());
+	}
+}
+
+void ASlashCharacter::Tick(float DeltaTime)
+{
+	if (Attributes && EveOverlay) 
+	{
+		Attributes->RegenStamina(DeltaTime);
+		EveOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
 	}
 }
 
@@ -226,6 +236,24 @@ bool ASlashCharacter::CanArm()
 		CharacterState == ECharacterState::ECS_Unequipped &&
 		EquippedWeapon;
 }
+void ASlashCharacter::Dodge()
+{
+	if (IsOccupied() || !HasEnoughStamina()) return;
+	PlayDodgeMontage();
+	ActionState = EActionState::EAS_Dodge;
+	if (Attributes && EveOverlay) {
+		Attributes->UseStamina(Attributes->GetDodgeCost());
+		EveOverlay->SetStaminaBarPercent(Attributes->GetStaminaPercent());
+	}
+}
+bool ASlashCharacter::HasEnoughStamina()
+{
+	return Attributes && Attributes->GetStamina() > Attributes->GetDodgeCost();
+}
+bool ASlashCharacter::IsOccupied()
+{
+	return ActionState != EActionState::EAS_Unoccupied;
+}
 void ASlashCharacter::AttachWeaponToBack()
 {
 	if (EquippedWeapon) {
@@ -275,6 +303,13 @@ void ASlashCharacter::Arm()
 void ASlashCharacter::AttackEnd()
 {
 	ActionState = EActionState::EAS_Unoccupied;
+}
+
+void ASlashCharacter::DodgeEnd()
+{
+	Super::DodgeEnd();
+	ActionState = EActionState::EAS_Unoccupied;
+
 }
 
 void ASlashCharacter::Die()
