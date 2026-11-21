@@ -35,7 +35,7 @@ protected:
 	virtual bool CanAttack() override;
 	virtual void AttackEnd() override;
 	virtual void DodgeEnd() override;
-	virtual void Die() override;
+	virtual void Die_Implementation() override;
 
 	void EquipWeapon(AWeapon* Weapon);
 	void MoveForward(float Value);

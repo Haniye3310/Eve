@@ -21,7 +21,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Die() override;
+	virtual void Die_Implementation() override;
 	void SpawnSoul();
 	virtual void Attack() override;
 	virtual bool CanAttack() override;
